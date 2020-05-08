@@ -16,4 +16,17 @@ class StorageHelper
         }
     }
 
+
+    protected function getFilename($file)
+    {
+       
+        $hash = sha1_file($this->getStoragePath().$file);
+
+        $name = substr_replace($hash, '/', 2, 0);
+        $name = substr_replace($name, '/', 5, 0); 
+
+        return $name . '.' . $this->getFileExt($file);
+
+    }
+
 }
