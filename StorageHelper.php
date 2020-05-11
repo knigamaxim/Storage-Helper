@@ -29,4 +29,46 @@ class StorageHelper
 
     }
 
+    protected function getFileExt($file)
+    {
+        return strtolower( (new \SplFileInfo($file))->getExtension() );
+    }
+
+    protected function getStoragePath()
+    {
+        return __DIR__.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR;
+    }
+
+
+    public function getFile(string $filename)
+    {
+        return  $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"] . '/uploads/' . 
+                $filename;
+    }
+
+    public static function normalizePath($path, $ds = DIRECTORY_SEPARATOR)
+    {
+        $path = rtrim(strtr($path, '/\\', $ds . $ds), $ds);
+        if (strpos($ds . $path, "{$ds}.") === false && strpos($path, "{$ds}{$ds}") === false) {
+            return $path;
+        }
+        if (strpos($path, "{$ds}{$ds}") === 0 && $ds == '\\') {
+            $parts = [$ds];
+        } else {
+            $parts = [];
+        }
+        foreach (explode($ds, $path) as $part) {
+            if ($part === '..' && !empty($parts) && end($parts) !== '..') {
+                array_pop($parts);
+            } elseif ($part === '.' || $part === '' && !empty($parts)) {
+                continue;
+            } else {
+                $parts[] = $part;
+            }
+        }
+        $path = implode($ds, $parts);
+        return $path === '' ? '.' : $path;
+    }
+    
+
 }
