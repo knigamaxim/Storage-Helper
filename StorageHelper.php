@@ -69,6 +69,22 @@ class StorageHelper
         $path = implode($ds, $parts);
         return $path === '' ? '.' : $path;
     }
-    
+ 
+
+    public static function createDirectory($path, $mode = 0775, $recursive = true)
+    {
+        if (is_dir($path)) {
+            return true;
+        }
+        $parentDir = dirname($path);
+
+        if ($recursive && !is_dir($parentDir) && $parentDir !== $path) {
+            static::createDirectory($parentDir, $mode, true);
+        }
+       if (!mkdir($path, $mode)) {
+                return false;
+        }
+        return chmod($path, $mode);
+    }    
 
 }
