@@ -87,4 +87,28 @@ class StorageHelper
         return chmod($path, $mode);
     }    
 
+
+    public function saveAs($oldname, $newname)
+    {
+    	if(rename($oldname, $newname)) return true;
+    	return false;
+    }
+
+
+    protected function preparePath($file)
+    {
+        $this->fileName = $this->getFileName($file);  
+        //     0c/a9/277f91e40054767f69afeb0426711ca0fddd.jpg
+        
+        $path = $this->getStoragePath() . $this->fileName;  
+        //     /var/www/project/frontend/web/uploads/0c/a9/277f91e40054767f69afeb0426711ca0fddd.jpg
+        
+        $path = self::normalizePath($path);
+        if (self::createDirectory(dirname($path))) {
+            return $path;
+        }
+    }
+
+
+
 }
