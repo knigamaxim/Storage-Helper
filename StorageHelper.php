@@ -81,10 +81,20 @@ class StorageHelper
         if ($recursive && !is_dir($parentDir) && $parentDir !== $path) {
             static::createDirectory($parentDir, $mode, true);
         }
-       if (!mkdir($path, $mode)) {
+        try {
+            if (!mkdir($path, $mode)) {
                 return false;
+            }
+        } catch (\Exception $e) {
+            if (!is_dir($path)) {
+                throw new \Exception("Failed to create directory \"$path\": " . $e->getMessage());
+            }
         }
-        return chmod($path, $mode);
+        try {
+            return chmod($path, $mode);
+        } catch (\Exception $e) {
+            throw new \Exception("Failed to change permissions for directory \"$path\": " . $e->getMessage());
+        }
     }    
 
 
@@ -98,11 +108,9 @@ class StorageHelper
     protected function preparePath($file)
     {
         $this->fileName = $this->getFileName($file);  
-        //     0c/a9/277f91e40054767f69afeb0426711ca0fddd.jpg
         
         $path = $this->getStoragePath() . $this->fileName;  
-        //     /var/www/project/frontend/web/uploads/0c/a9/277f91e40054767f69afeb0426711ca0fddd.jpg
-        
+       
         $path = self::normalizePath($path);
         if (self::createDirectory(dirname($path))) {
             return $path;
