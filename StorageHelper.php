@@ -16,6 +16,11 @@ class StorageHelper
         }
     }
 
+    public static function save($file)
+    {
+        return (new self)->saveUploadedFile($file);
+    }
+
 
     protected function getFilename($file)
     {
