@@ -4,13 +4,15 @@
 
 class StorageHelper
 {
-
     private $fileName;
+    private $storageDir;
+    const DS = DIRECTORY_SEPARATOR;
+    const DEFAULT_STORAGE_DIR = __DIR__ . DS . 'uploads';
 
-    public function saveUploadedFile($file)
+    public function saveUploadedFile(string $filename , string $destination = DEFAULT_STORAGE_DIR)
     {
-        $newname = $this->preparePath($file); 
-        $oldname = $this->getStoragePath().$file;
+        $newname = $this->preparePath($filename); 
+        $oldname = $destination . DS . $filename;
         if ($newname && $this->saveAs($oldname, $newname)) {
             return $this->fileName;
         }
