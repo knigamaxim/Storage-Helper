@@ -9,7 +9,7 @@ class StorageHelper
     const DS = DIRECTORY_SEPARATOR;
     const DEFAULT_STORAGE_DIR = __DIR__ . DS . 'uploads';
 
-    public function saveUploadedFile(string $filename , string $destination = DEFAULT_STORAGE_DIR)
+    public function saveUploadedFile(string $filename, string $destination = DEFAULT_STORAGE_DIR)
     {
         $newname = $this->preparePath($filename); 
         $oldname = $destination . DS . $filename;
@@ -25,15 +25,11 @@ class StorageHelper
 
 
     protected function getFilename($file)
-    {
-       
+    {    
         $hash = sha1_file($this->getStoragePath().$file);
-
         $name = substr_replace($hash, '/', 2, 0);
         $name = substr_replace($name, '/', 5, 0); 
-
         return $name . '.' . $this->getFileExt($file);
-
     }
 
     protected function getFileExt($file)
@@ -41,17 +37,6 @@ class StorageHelper
         return strtolower( (new \SplFileInfo($file))->getExtension() );
     }
 
-    protected function getStoragePath()
-    {
-        return __DIR__.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR;
-    }
-
-
-    public function getFile(string $filename)
-    {
-        return  $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"] . '/uploads/' . 
-                $filename;
-    }
 
     public static function normalizePath($path, $ds = DIRECTORY_SEPARATOR)
     {
@@ -114,10 +99,8 @@ class StorageHelper
 
     protected function preparePath($file)
     {
-        $this->fileName = $this->getFileName($file);  
-        
+        $this->fileName = $this->getFileName($file);         
         $path = $this->getStoragePath() . $this->fileName;  
-       
         $path = self::normalizePath($path);
         if (self::createDirectory(dirname($path))) {
             return $path;
